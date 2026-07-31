@@ -305,9 +305,14 @@ func (r *GroupSnapshotReconciler) raiseBarriers(ctx context.Context, grp *miroir
 		}
 		if err := r.suspendIO(ctx, m.vol.Name); err != nil {
 			// A half-raised node must not stay half-frozen behind a failed
-			// raise; the retry re-raises the lot.
+			// raise; the retry re-raises the lot. The failed leg itself
+			// joins the resume: a wedged suspend-io (LINBIT/drbd#137) can
+			// report failure after the kernel flag already landed.
 			thawMounted(ctx, r.Freezer, r.NodeName, m.vol)
-			_ = r.resumeMine(ctx, grp, suspended)
+			if rerr := r.resumeMine(ctx, grp, append(suspended, m)); rerr != nil {
+				ctrl.LoggerFrom(ctx).Info("resume after failed suspend-io incomplete; periodic sweep covers recovery",
+					"volume", m.vol.Name, "error", rerr.Error())
+			}
 			return r.barrierFailed(ctx, grp, m.vol, err)
 		}
 		suspended = append(suspended, m)
