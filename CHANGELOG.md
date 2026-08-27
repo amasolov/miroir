@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.24](https://github.com/home-operations/miroir/compare/0.11.23...0.11.24) (2026-08-27)
+
+
+### Features
+
+* **container:** update image registry.k8s.io/kubectl (v1.36.4 → v1.37.0) ([#448](https://github.com/home-operations/miroir/issues/448)) ([74e7f29](https://github.com/home-operations/miroir/commit/74e7f29de816973f2c17605da1caf2afab2e6e6c))
+
 ## [0.11.23](https://github.com/home-operations/miroir/compare/0.11.22...0.11.23) (2026-08-25)
 
 
